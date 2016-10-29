@@ -6,6 +6,7 @@
 
 class QLabel;
 class QScrollArea;
+class JuBookModel;
 namespace Ui {
 class JuMainWindow;
 }
@@ -25,13 +26,21 @@ private slots:
 private:
     Ui::JuMainWindow *ui;
 
+    void setModel(JuBookModel *model) { _model = model;}
     void createActions();
     //void createMenus();
+    void setImage(const QImage &newImage);
 
+    JuBookModel *_model;
+
+    QImage _image;
     QLabel *_imageLabel;
     QScrollArea *_scrollArea;
 
     QAction *_openAct;
+
+    QAction *_nextPageAct;
+    QAction *_prevPageAct;
 
 };
 

@@ -1,7 +1,7 @@
-#include "jumainwindow.h"
-#include "imageviewer.h"
 #include <QApplication>
 #include <QDebug>
+#include "jumainwindow.h"
+#include "imageviewer.h"
 
 int main(int argc, char *argv[])
 {

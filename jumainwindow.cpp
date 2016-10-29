@@ -5,13 +5,16 @@
 #include <QStandardPaths>
 #include <QImageReader>
 #include <QImageWriter>
+#include <QMessageBox>
 #include <QDebug>
 #include "jumainwindow.h"
+#include "jubookmodel.h"
 #include "ui_jumainwindow.h"
 
 JuMainWindow::JuMainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::JuMainWindow),
+    _model(0),
     _imageLabel(new QLabel),
     _scrollArea(new QScrollArea),
     _openAct(0)
@@ -38,6 +41,36 @@ JuMainWindow::~JuMainWindow()
 
 bool JuMainWindow::loadFile(const QString &file) {
     qDebug()<<"load!";//debug
+    JuBookModel * newModel = new JuBookModel(file);
+    if (newModel->isEmpty()) {
+        qDebug()<<"error:empty book!";//debug
+        return false;
+    } else {
+        setModel(newModel);
+
+        const QImage newImage = _model->curPage();
+        if (newImage.isNull()) {
+            QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+                                                            tr("Cannot load"));
+            return false;
+        }
+        setImage(newImage);
+
+        this->setWindowFilePath(file);
+
+        const QString message = tr("Opened \"%1\", %2x%3, Depth: %4")
+            .arg(QDir::toNativeSeparators(file)).arg(_image.width()).arg(_image.height()).arg(_image.depth());
+        statusBar()->showMessage(message);
+
+        return true;
+    }
+}
+
+void JuMainWindow::setImage(const QImage &newImage) {
+    _image = newImage;
+    _imageLabel->setPixmap(QPixmap::fromImage(_image));
+    _scrollArea->setVisible(true);
+    _imageLabel->resize(_imageLabel->pixmap()->size());
 }
 
 void JuMainWindow::open() {
