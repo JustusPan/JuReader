@@ -5,6 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT += widgets
+qtHaveModule(printsupport): QT += printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -13,8 +15,17 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        jumainwindow.cpp
+        jumainwindow.cpp \
+    imageviewer.cpp \
+    jubookitem.cpp \
+    jubookmodel.cpp
 
-HEADERS  += jumainwindow.h
+HEADERS  += jumainwindow.h \
+    imageviewer.h \
+    jubookitem.h \
+    jubookmodel.h
 
 FORMS    += jumainwindow.ui
+
+#CONFIG += qt warn_on relase
+CONFIG += qt warn_on debug
