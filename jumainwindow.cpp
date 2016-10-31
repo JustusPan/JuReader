@@ -84,6 +84,8 @@ void JuMainWindow::setImage(const QImage &newImage) {
 void JuMainWindow::scaleImage(double factor) {
     _scaleFactor *= factor;
     _imageLabel->resize(_scaleFactor*_imageLabel->pixmap()->size());
+    //this->resize(_imageLabel->size());
+    //_scrollArea->adjustSize();
     _zoomInAct->setEnabled(_scaleFactor < 3);
     _zoomOutAct->setEnabled(_scaleFactor > 0.5);
 }
