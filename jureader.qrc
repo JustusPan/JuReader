@@ -1,0 +1,10 @@
+<RCC>
+    <qresource prefix="/Icon">
+        <file alias="left.icon">images/left-arrow.png</file>
+        <file alias="open.icon">images/open.png</file>
+        <file alias="right.icon">images/right-arrow.png</file>
+        <file alias="zoomIn.icon">images/plus.png</file>
+        <file alias="zoomOut.icon">images/minus.png</file>
+        <file alias="normalSize.icon">images/tick.png</file>
+    </qresource>
+</RCC>
