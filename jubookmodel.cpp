@@ -1,4 +1,5 @@
 #include <QFileInfo>
+#include <QSysInfo>
 #include "jubookmodel.h"
 
 //QList<QByteArray> JuBookModel::s_validFormat=QImageReader::supportedImageFormats();
@@ -9,7 +10,13 @@
 JuBookModel::JuBookModel(const QString& fileName) :
     _curPageIndex(-1)
 {
-    initBook(fileName);
+    //for window OS
+    QString localFileName;
+    if(QSysInfo::windowsVersion()!=QSysInfo::WV_None) {
+        localFileName = fileName.split("/").join("\\");
+    }
+
+    initBook(localFileName);
 }
 
 JuBookModel::~JuBookModel() {
