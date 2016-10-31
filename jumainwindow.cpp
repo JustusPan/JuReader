@@ -41,7 +41,8 @@ JuMainWindow::~JuMainWindow()
 }
 
 bool JuMainWindow::loadFile(const QString &file) {
-    qDebug()<<"load!";//debug
+    qDebug()<<"load!---------------------------";//debug
+    qDebug()<<"file = "<<file;//debug
     JuBookModel * newModel = new JuBookModel(file);
     if (newModel->isEmpty()) {
         qDebug()<<"error:empty book!";//debug
