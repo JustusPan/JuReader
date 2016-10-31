@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
 QT += widgets
 qtHaveModule(printsupport): QT += printsupport
 
@@ -29,3 +29,6 @@ FORMS    += jumainwindow.ui
 
 #CONFIG += qt warn_on relase
 CONFIG += qt warn_on debug
+
+RESOURCES += \
+    jureader.qrc

@@ -28,11 +28,13 @@ private slots:
     void zoomIn();
     void zoomOut();
     void normalSize();
+    void fitToWindow();
 private:
     Ui::JuMainWindow *ui;
 
     void setModel(JuBookModel *model) { _model = model;}
     void createActions();
+    void initToolBar();
     void updateActions();
     //void createMenus();
     void setImage(const QImage &newImage);
@@ -53,10 +55,11 @@ private:
     QAction *_zoomInAct;
     QAction *_zoomOutAct;
     QAction *_normalSizeAct;
+    QAction *_fitToWindowAct;
 
 };
 
-static void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode);
+//static void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode);
 
 
 #endif // JUMAINWINDOW_H

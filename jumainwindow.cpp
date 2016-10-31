@@ -6,6 +6,8 @@
 #include <QImageReader>
 #include <QImageWriter>
 #include <QMessageBox>
+#include <QIcon>
+#include <QToolBar>
 #include <QDebug>
 #include "jumainwindow.h"
 #include "jubookmodel.h"
@@ -32,6 +34,7 @@ JuMainWindow::JuMainWindow(QWidget *parent) :
     setCentralWidget(_scrollArea);
 
     createActions();
+    initToolBar();
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
 }
 
@@ -85,6 +88,7 @@ void JuMainWindow::scaleImage(double factor) {
     _zoomOutAct->setEnabled(_scaleFactor > 0.5);
 }
 
+static void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode);
 void JuMainWindow::open() {
     qDebug()<<"open!";//debug
     QFileDialog dialog(this, tr("Open File"));
@@ -134,42 +138,76 @@ void JuMainWindow::normalSize() {
     scaleImage(1);
 }
 
+void JuMainWindow::fitToWindow() {
+    bool isChecked = _fitToWindowAct->isChecked();
+    _scrollArea->setWidgetResizable(isChecked);
+    if (!isChecked) normalSize();
+    updateActions();//for zoom
+}
+
 void JuMainWindow::createActions() {
     //for file Menu
     QMenu *fileMenu = menuBar()->addMenu(tr("&File"));
 
-    QAction *_openAct = fileMenu->addAction(tr("&Open..."), this, &JuMainWindow::open);
+    _openAct = fileMenu->addAction(tr("&Open..."),this, &JuMainWindow::open);
+    _openAct->setIcon(QIcon(QPixmap(":/Icon/open.icon")));
     _openAct->setShortcut(QKeySequence::Open);
+    _openAct->setEnabled(true);
 
     //for go Menu
     QMenu *goMenu = menuBar()->addMenu(tr("&Go"));
-    _nextPageAct = goMenu->addAction(tr("&NextPage"), this, &JuMainWindow::nextPage);
-    _nextPageAct->setShortcut(QKeySequence::MoveToNextChar);
-    _nextPageAct->setEnabled(false);
     _prevPageAct = goMenu->addAction(tr("&PrevPage"), this, &JuMainWindow::prevPage);
+    _prevPageAct->setIcon(QIcon(QPixmap(":/Icon/left.icon")));
     _prevPageAct->setShortcut(QKeySequence::MoveToPreviousChar);
     _prevPageAct->setEnabled(false);
+    _nextPageAct = goMenu->addAction(tr("&NextPage"), this, &JuMainWindow::nextPage);
+    _nextPageAct->setIcon(QIcon(QPixmap(":/Icon/right.icon")));
+    _nextPageAct->setShortcut(QKeySequence::MoveToNextChar);
+    _nextPageAct->setEnabled(false);
 
     //for zoom Menu
     QMenu *zoomMenu = menuBar()->addMenu(tr("&Zoom"));
     _zoomInAct = zoomMenu->addAction(tr("Zoom &In"), this, &JuMainWindow::zoomIn);
+    _zoomInAct->setIcon(QIcon(QPixmap(":/Icon/zoomIn.icon")));
     _zoomInAct->setShortcut(QKeySequence::ZoomIn);
     _zoomInAct->setEnabled(false);
     _zoomOutAct = zoomMenu->addAction(tr("Zoom &Out"), this, &JuMainWindow::zoomOut);
+    _zoomOutAct->setIcon(QIcon(QPixmap(":/Icon/zoomOut.icon")));
     _zoomOutAct->setShortcut(QKeySequence::ZoomOut);
     _zoomOutAct->setEnabled(false);
     _normalSizeAct = zoomMenu->addAction(tr("&Normal Size"),this,&JuMainWindow::normalSize);
+    _normalSizeAct->setIcon(QIcon(QPixmap(":/Icon/normalSize.icon")));
     _normalSizeAct->setShortcut(QKeySequence("Ctrl+N"));
     _normalSizeAct->setEnabled(false);
+    _fitToWindowAct = zoomMenu->addAction(tr("&Fit to Window"),this, &JuMainWindow::fitToWindow);
+    //_fitToWindowAct->setIcon(QIcon(QPixmap(":/Icon/")));
+    _fitToWindowAct->setShortcut(QKeySequence("Ctrl+F"));
+    _fitToWindowAct->setCheckable(true);
+    _fitToWindowAct->setEnabled(false);
 
 }
 
+void JuMainWindow::initToolBar() {
+
+    QToolBar* mainToolBar = addToolBar(tr("mainToolBar"));
+    mainToolBar->addAction(_openAct);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(_prevPageAct);
+    mainToolBar->addAction(_nextPageAct);
+    mainToolBar->addSeparator();
+    mainToolBar->addAction(_zoomInAct);
+    mainToolBar->addAction(_zoomOutAct);
+    mainToolBar->addAction(_normalSizeAct);
+    mainToolBar->addAction(_fitToWindowAct);
+}
+
 void JuMainWindow::updateActions() {
-   _nextPageAct->setEnabled(!_image.isNull());
    _prevPageAct->setEnabled(!_image.isNull());
+   _nextPageAct->setEnabled(!_image.isNull());
    _zoomInAct->setEnabled(!_image.isNull());
    _zoomOutAct->setEnabled(!_image.isNull());
    _normalSizeAct->setEnabled(!_image.isNull());
+   _fitToWindowAct->setEnabled(!_image.isNull());
 }
 
 static void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode)
